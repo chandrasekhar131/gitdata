@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 git : this is a repository tool 
       its created repositorys in .war files
@@ -14,6 +15,10 @@ git : this is a repository tool
 
 
 t is the source code repository
+=======
+t is the source code repositoryits 
+its cretes a .war files
+>>>>>>> ac80d6f94e41fa60467ba28e169275f54b00458f
 
 ----------
 git basics:-
