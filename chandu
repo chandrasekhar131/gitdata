@@ -1,0 +1,490 @@
+t is the source code repository
+
+----------
+git basics:-
+----------
+
+#git --version  --> shows git installed version
+#git help   -->shows common git commands with description
+#git help -a   --> shows all commands in git
+#git help -g   --> shows git guides
+    ex:-
+	#git help attributes
+	#git help everyday
+
+--------------------------
+configuring user and email:-
+--------------------------
+
+#git config --global user.name "appu"
+#git config --global user.email "ayyappa460@gmail.com"
+
+	it will be generated in .gitconfig file which was created in user home directory
+
+----------------------------
+3 ways to set git repository:-
+----------------------------
+
+1)
+	from scratch:-
+		#mkdir repofromscratch
+		#cd repofromscratch
+		#git init   --> initializes the git local repository with scratch
+				it creates .git folder in local repository
+		#ll -a   --> it shows hidden files like .git folder
+
+2)
+	from existing project:-
+		#cd maven/webapp
+		#git init   ---> it initializes the local repository in the project(.git)
+
+3)
+	from remote repository:-
+		3.a)
+			create bare repository in linux machine
+			#makedir repo
+			#cd repo
+			#git init --bare   ---> creates the bare repository(remote repo)in linux machine
+			
+			create ssh connection b//n 2 machines using these 3 commands
+			#ssh root@ipaddress
+			#ssh-keygen
+			#ssh-copy-id root@ipaddress   ---> it makes passwordless login by copying rsa private key into authenticaton
+
+			create local repository by cloning remote repository
+			#mkdir repofromgitserver
+			#cd repofromgitserver
+			#git clone root@ipaddress:path of remote repository in remote machine
+			#ll
+			#cd repo
+			#ll -a
+			#ll .git
+			#git config --list   ---> it shows the origin url of remote repo and user name 
+			
+			the difference b//n remote repo and local repo is only branch folder present in remote repo
+		
+		3.b)
+			create github repository by logging into it.
+			open github.com and signup and create repository there and copy the url of the github
+			generate ssh key in developer machine and copy the public key
+			goto github settings and paste the public key in ssh and gpg keys section by adding new key to it.
+			then clone it in local repository
+
+			#mkdir repofromgithub
+			#cd repofromgithub
+			#git clone  url of github
+			#ll -a
+			#git config --list   ---> it shows the origin url of github
+			
+			github is the gui based remote repository
+
+-------------
+how git works :-
+-------------
+
+there are three main states for an artifact file in the machine 
+			they are:- I) Modified area(working area)
+				   II) Staged area(cache area)
+				   III) committed area
+
+the main commands we use are:-
+			git add   ---> it moves the files from working area to staging area
+			git commit   ---> it moves the files from staging area to local repository
+			git push   ---> it pushes the code from local repository to the remote repository
+			git pull   ---> it pulls/updates the code from remote repo to local repo
+					it internally fetch the code and merge the code in local repo
+
+----------------
+adding the files:-
+----------------
+
+#cd repofromgithub
+#touch appu1.java appu2.java appu3.java
+#vi appu1.java
+#git status   ---> it shows the diff b//w working area and staging area and committed/local area
+#git add .   ---> it adds the all newly created files into staging area
+#git status
+#git rm --cached -r   ---> it moves the files back to working area from staging area
+#git add .
+#git commit -m "new files added"   ---> it adds the all files from staging area to comitted area with a message
+#git status
+#git push origin master   ---> it adds the files from local repo to remote repo by using ssh connection
+
+				here origin is having remote repo url
+				here master is called as main branch
+#git pull origin master   ---> it fetches and merges the code in local repo from remote repo
+---------------------------------------------------------------------------------------------
+#git commit -a -m "modified appu1.java"   ---> it adds and commits the changes done in the file and adds to the local repo.
+#git commit -am "message"   ---> adds and commits the file in a single line
+---------------------------------------------------------------------------------------------
+
+--------------
+removing files:-
+--------------
+
+#git rm appu2.java   ---> it removes the files from working area
+#git status
+#git commit -m "deleted appu2.java"   ---> it removes the files from committed area
+#git push origin master   ---> it removes the files from remote repo
+--------------------------------------------------------------------------------------------
+
+#git branch   ---> it shows the how many branches present in the local repo
+#git blame   ---> it shows the modifications which we have done line by line with hash code and time
+#git fetch origin master   ---> it fetches the data from remote repo and copies it into cache area in local machine
+#git diff ...origin   ---> it checks the differences b//w the files fetched and the files in local area
+#git merge   ---> it merges the fetched file into local repo file
+
+------------------------
+git parallel development:-
+------------------------
+
+#mkdir dev1
+#cd dev1
+#git clone github url
+#cd github1
+#ll
+#vi hello.java
+    appu
+    pappu
+    cheppu
+#git status
+#git commit -am "added lines1,2,3"
+#git push origin master
+
+#cd ../..
+#mkdir dev2
+#cd dev2
+#git clone github url
+#cd github1
+#ll
+#git pull origin master
+#vi hello.java
+    amma
+    nanna
+#git status
+#git commit -am "4,5 lines added"
+#git push origin master
+
+#cd ../..
+#cd dev1/github1
+#vi hello.java
+    ammullu
+    chitti
+#git commit -am "4,5 lines added"
+#git push origin master   ---> it throws errors because of updated code in remote repo 
+				so we have to pull the code and push it
+#git pull origin master   ---> it shows conflicts because of the 3,4 lines in the file are different in remote and local repos
+				so we have to merge the code 
+#git mergetool   ---> it will open the 4 windows
+			1)file modified by dev1 in window 1/3
+			2)file modified by dev2 in window 1/3
+			3)file withoutmodifications in window 2
+			4)file to be modified in window 4
+		      it will create hello.java.orig in the local repo
+#git status
+#rm -rf hello.java.orig   ---> we have to remove .orig file from the local repo
+#git commit -am "modified file"   ---> we have to commit it
+#git push origin master   ---> then push it to remote repo
+
+			we can also use git fetch and git merge and git diff ...orig in this place
+----------------------------------------------------------------------------------------------------------------------------------
+
+---------------------------
+git status and log commands:-
+---------------------------
+
+git status   ---> it shows diff b//w working,staging,committed areas
+git status --long   ---> there is no diff b//w git status and git status --long
+git status -s   ---> it shows the diff b//w working,staging,committed areas in short description
+
+#vi hello.java
+	all is well
+#git status -s
+#git add .
+#git status -s
+#git commit -m "new line"
+#git status -s
+#touch appu.html
+#git status -s
+#git add .
+#git status -s
+#git commit -m "new file added"
+#git status -s
+
+
+git log   ---> it shows all the commits which has done with long description like message,author,email,hash code
+git log --oneline   ---> it shows commits with short hash code and commit message
+git log filename   ---> it shows the commits which was happend to that file with long description
+git log --author author   ---> it shows the commits related to the author
+git log --oneline filename   ---> it shows commits happend to the file with in one line
+git log --oneline --author author   ---> it shows commits done by the author within one line
+git shortlog   ---> it shows the userwise commits within one line
+git log -n 3 --oneline   ---> it shows the latest 3 commits happened
+git log --since="01-July-2018"--until="08-July-2018"   ---> it shows the commits within the period
+git log hashcode(since)..hashcode(until)   ---> it shows the commits happened b//w the hashcodes
+
+#git log
+#git log --oneline
+#git log appu1.java
+#git log --oneline appu1.java
+#git log --author ayyappa
+#git log --oneline --author ayyappa
+#git shortlog
+#git log -n 3 --oneline
+#git log 9c7eb85..2305eed --oneline
+
+------------------------------------------------------------------------------------------------------------------------
+
+-----------------------
+git directory structure:-
+-----------------------
+
+Master   ---> production copy
+Branches   ---> releases
+Tags   ---> patches(read only)/updates
+
+--------------------------------------------------------------
+---------------------------
+git parallel branching strategy:-
+---------------------------
+
+#cd dev1/github1
+#git branch f1   ---> it will creates the new branch name f1
+			also copies the files present in the master to branch
+#git branch   ---> it will show all the branches present in the local repo and show the head(working) at wich branch
+#ll   ---> it shows the files in the master
+#git checkout f1   ---> it will checkout/goes to the branch f1
+#ll   ---> it will shows the files present in the branch
+#git branch
+#git status
+#touch welcome.html
+#git add .
+#git commit -m "welcome file created"
+#git push origin f1
+#git branch -a   ---> it shows all the branches
+#git branch -r   ---> it shows all the remote branches
+
+#git checkout -b f2   ---> it will create new branch f2 and checkout to f2 branch in oneline. -b ---> branch
+#cd ../..
+#cd dev2/github1
+#git fetch origin f1 f1:f1   ---> it will create new branch f1 in another machine with the reference of remote branch f1 in github by mapping with branch f1 in local repo
+
+#cd ../..
+#cd dev1/github1
+
+#git branch -d(--delete) f1   ---> it will delete the branch f1 in local repo(merge conflicts arises if any)
+#git branch -D(--delete --force) f1   ---> it will delete the branch f1 forcefully in the local repo
+
+#git push origin :refs/heads/f1   --->it will delete branch f1 in remote repo
+#git push origin --delete f1   --->it will delete remote branch f1
+#git push origin :f1   ---> it will delete remote branch f1
+
+#git branch -m f2 f1   ---> it will rename the branch f2 to branch f1
+
+---------------------------------------------------------------------------------------------------------------------------------
+--------
+git tags:-
+--------
+
+#git tag   ---> it will show the tags present in the local repo
+#git checkout branch f1
+#touch hello.java
+#git add .
+#git commit -m "hello file created"
+#git push origin f1
+#git tag tag1   ---> tag1 is created from branch f1 so all files created in f1 present in tag1
+#touch hi.txt
+#git add .
+#git commit -m "hi file created"
+#git push origin f1
+#git checkout tag1
+#git push origin tag1   ---> it pushes the tag to remote repo
+				tags dont have any new files in it after tag creation
+#touch files
+#git checkout master
+#git tag -d tag1   ---> it deletes the tag1 in local repo
+#git push origin :refs/tags/tag1   ---> it will delete tag1 in remote repo
+-----------------------------------------------------------------------------------------------------------------
+
+-------------------------------------
+git directory and branching structure:-
+-------------------------------------
+
+1)sequential branching(time taking)
+2)parallel branching
+
+------------------
+parallel branching:-
+------------------
+objective= no data loss in production
+master=production
+
+ex:-
+--
+
+#git checkout master
+#git rm filename   ---> cleaning master
+#git add .
+#git commit -m "cleaning master"
+#git push origin master
+	now the master is clean
+----------
+#touch monitor.sh
+#git add .
+#git commit -m "adding core file with shell"
+#git push origin master
+#git branch release1
+#git checkout release1
+#touch jenkinsfile1 jenkinsfile2
+#git add .
+#git commit -m "release1 changes"
+#git push origin release1
+
+#git checkout master
+#git branch release2
+#git checkout release2
+#touch dockerfile1 dockerfile2
+#git add .
+#git commit -m "release2 changes"
+#git push origin release2
+
+#git checkout master
+#git branch release3
+#git checkout release3
+#touch ansiblefile1 ansiblefile2
+#git add .
+#git commit -m "release3 changes"
+#git push origin release3
+
+#git checkout master
+#git merge release1
+#git push origin master
+
+#git checkout release2
+#git merge master
+#git push origin release2
+#git checkout master
+#git merge release2
+#git push origin master
+
+#git checkout release3
+#git merge master
+#git push origin release3
+#git checkout master
+#git merge release3
+#git push origin master
+
+-----------------------------------------------------------------------------------------------
+
+----------------------
+Important git commands:-
+----------------------
+
+1) git diff   ---> to know the difference b//w staging area and local area
+   git diff release1 release2   ---> to know difference b//w branches
+   
+   ex:-
+   --
+	#git status
+	#echo "shell script">monitor.sh
+	#git status
+	#git diff
+	#echo "jenkins">jenkinsfile1.sh
+	#git diff release1 release2
+	#git checkout release1
+	#ll
+	#git checkout release2
+	#ll
+2) git show charset   ---> to know diff b//w 2 commits/releases
+	ex:-
+	--
+	    #git log --oneline
+	    #git show idb4406(charset)
+3) git checkout charset   ---> to checkout to the previous commits
+	ex:-
+	--
+	   #git checkout idb4406(charset)
+	   #ll
+	   #cat if any file
+4) git clean -n   ---> it tells about the untracked files in the working directory
+   git clean -f   ---> it removes the untracked files from the working directory
+	ex:-
+	--
+	  #git checkout master
+	  #touch text
+	  #git clean -n
+	  #git clean -f
+5) git checkout filename   ---> revert back to remote copy(before commit)
+	ex:-
+	--
+	  #cat jenkinsfile1.sh
+		echo"line2">>jenkinsfile1.sh
+		echo"line3">>jenkinsfile1.sh
+	  #git checkout jenkinsfie1.sh
+
+----------------------------------------------------------------------------------------
+
+------------
+git stashing:-
+------------
+
+it stores files in cache area
+
+ex:-
+--
+
+#touch t1 t2 t3 t4
+#git status
+#git clean -n
+#git add .
+#git status
+#git stash   ---> stores the files into cache area(latest files stored in 0 index area)
+#echo "jenkins changes">>jenkinsfile2.sh
+#git status
+#git commit -am "jenkins changes"
+#git push origin master
+#git status
+#git stash list   ---> it shows the files stored in cache area
+#git stash pop   ---> it will apply and drop the cache area files into staging area(files in index area 0)
+#git stash
+#touch t5 t6 t7
+#git add .
+#git stash
+#git stash list
+#git stash apply stash@{1}   ---> applies and retreives the files from selected index area to staging area
+#git stash drop stash@{1}   ---> drops the selected stash index files
+#git stash list
+#git stash pop
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------
+git commands of remote repository:-
+---------------------------------
+
+#git remote add webapp url of github   ---> adding new remote repository to the config list in working directory
+#git config --list
+#git remote show origin   ---> it will show the details about the remote repository stored in origin
+#git remote -v   ---> it will show the remote repositories added to the working directory
+
+--------------------------------------------
+copy files from one branch to another branch:-
+--------------------------------------------
+To copy file(s) from from another branch to the current one in Git, there are two possible options:
+
+1)use the git show command:
+  (it was in untracked files)
+  
+$ git show <branch_name>:path/to/file >path/to/local/file
+
+2)use the git checkout command:
+  (it was in staging area)
+
+$ git checkout <branch_name> path/to/new/file
+
+3) copy the file from previous commits
+
+	#git show hashcode:filename in commit >file name to be created in branch
+	ex:-
+	    git show sdsj3:appu1.java >appu.java
+
+
