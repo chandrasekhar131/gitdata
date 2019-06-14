@@ -1,0 +1,111 @@
+hellow w===worla
+
+
+
+t Installation
+===================
+
+--> Take EC2 instances like (Redhat,, Ubuntu..)
+
+--> Launch the SSH url in GitBash.
+
+--> Update the machine 
+
+	# apt-get update -y
+
+		(or)
+
+	# yum update -y
+
+--> Install Java 
+
+	# apt-get install -y java-1.8.0-openjdk-devel
+
+		(or)
+
+	# yum install -y java-1.8.0-openjdk-devel
+
+--> Install wget
+
+	# apt-get install wget -y
+
+		(or)
+
+	# yum install wget -y 
+
+--> Copy the link "Apache-tomcat version 8 or 9 tar.gz" from apache tomcat website.
+
+	# wget <Copy the link address>
+
+--> Check the list of files 
+	
+	# ls
+
+--> Un-tar the apache-tomcat 
+
+	# tar -xvf <Paste the .tar file>
+
+--> Change the directory
+
+	# cd <Paste theApache-tomcat blue color file>
+
+--> Check the list of files
+
+	# ls
+	
+--> Goto bin folder
+
+	# cd bin/
+
+--> Check the list of files
+
+	# ls
+
+--> Start the services 
+
+	# ./start.sh
+
+--> Goto EC2 instance --> Click on Security grps -->All-traffic
+
+--> Copy the PublicIP from the EC2 Instance
+
+--> Goto google paste pubIP:8080
+
+--> Click on manager-App
+
+--> Copy the username link lines
+
+--> Goto apache-tmacte folder
+
+	# cd apache-tomcate/
+	
+	# cd conf/
+
+	# vi tomcat-user.xml
+
+--> Paste the username link lines in last but one(tomcat users)
+
+-->	 # cd webapps/
+
+	# cd manager/
+	
+	# cd META-INF/
+	
+	# vi context.xml (<!--comment the value tag-->,  )
+
+	# cd bin/
+
+	# ./shutdown.sh
+
+	# ./startup.sh
+
+--> Goto google Refresh the apache-tomcat 
+
+--> Enter the username and password
+
+	
+	
+
+
+
+
